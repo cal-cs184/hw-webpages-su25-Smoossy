@@ -32,7 +32,7 @@
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage: <a href="http://htmlpreview.github.io/?https://github.com/cal-cs184/hw-webpages-su25-Smoossy/blob/main/hw1/index.html">the webpage</a>
 		
 		<br>
 
@@ -48,7 +48,7 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		The project had successfully constructed a system rendering 2D pictures, expressing images using dot, line and triangle. It is also capable of filling any triangle with texture. The project is a basis for further 3D rendering projects.
 
 		<h2>Task 1: Drawing Single-Color Triangles</h2>
 		<p>It is tempting to consider calculating every point in the triangle bounding box, but it will take a lot of time. Instead, we can find the lowest point of the triangle(marked as p0), and rearrange the points in a clockwise order(to help with "bounded by triangle check"). After doing so, we can start from the bottom-left point to p0. First, we search to the right side. Before touching the border of the bounding box, if find a point inside the box, and there isn't a checkpoint yet, mark a checkpoint. If the check point already exists, the search to the right stops once it goes out of the triangle. Then do the same thing to the leftward. The search of the next row will start from the point above the checkpoint.</p>
