@@ -32,15 +32,14 @@
 
 		<br>
 
-		Link to webpage: <a href="./index.html">the webpage</a>
+		Link to webpage: <a href="https://cal-cs184.github.io/hw-webpages-su25-Smoossy/hw1/index.html">the webpage</a>
 		
 		<br>
 
 		Link to GitHub repository: <a href="https://github.com/cal-cs184/hw-rasterizer-wuyan">github.com/cal-cs184/hw-rasterizer-wuyan</a>
 
 		<figure>
-			<img src="lion.jpg" alt="Lion" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
+			<img src="24.png" alt="parrot" style="width:50%"/>
 		</figure>
 
 		<!--
@@ -55,17 +54,36 @@
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<img src="RTR.png" width="400px"/>
+			<img src="17.png" alt="Lion" style="width:50%"/>
 		</div>
 		
 		<h2>Task 2: Antialiasing by Supersampling</h2>
-		<p>To keep the vertexes of the items unchanged, while, at the same time, increasing the resolution, is the main task of super sampling. To deal with this, we only need to update every step of the sample, from 1 pixel to 1/sqrt(supersample_rate) After sending this to the frame buffer, we weight each point as 1/3 and fill them accordingly to the screen buffer<p/>
+		<p>To keep the vertexes of the items unchanged, while, at the same time, increasing the resolution, is the main task of super sampling. To deal with this, we only need to update every step of the sample, from 1 pixel to 1/sqrt(supersample_rate) After sending this to the frame buffer(which is now multiple times in size as the original one), we weight each point as 1/supersample_rate and fill them mutiple-in-one with resolve_to_framebuffer() to the screen buffer<p/>
 		<div style="display: flex; flex-direction: column; align-items: center;">
-			<img src="1.png" width="250px"/><img src="3.png" width="250px"/>
-			<figcaption>from scale 1 to scale 9</figcaption>
+			<img src="1.png" width="250px"/><img src="2.png" width="250px"/><img src="4.png" width="250px"/>
+			<figcaption>sample rate 1, 4, 16</figcaption>
 		</div>
 
 		<h2>Task 3: Transforms</h2>
-		<p>This is pure linear algebra. I don't think I need to do any extra explaination.</p>
+		<p>This is the rotating matrix: 
+			\(\begin{pmatrix}
+  			cos(x)  &-sin(x)  &0 \\
+  			sin(x)  &cos(x)  &0 \\
+  			0  &0  &1
+			\end{pmatrix}\)</p>
+			<p>This is the scaling matrix:
+			\(\begin{pmatrix}
+  			sx  &0  &0 \\
+  			0  &sy  &0 \\
+  			0  &0  &1
+			\end{pmatrix}\)</p>
+			<p>This is the translating matrix:
+			\(\begin{pmatrix}
+  			1  &0  &dx \\
+  			0  &1  &dy \\
+  			0  &0  &1
+			\end{pmatrix}\)
+		</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<img src="5.png" width="400px"/>
 			<figcaption>the transform</figcaption>
@@ -76,6 +94,8 @@
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<img src="7.png" width="400px"/>
 			<figcaption>weighted triangle</figcaption>
+			<img src="18.png" width="400px"/>
+			<figcaption>circle filled with weighted triangles</figcaption>
 		</div>
 		<p>We can figure out the distance from \(a\) and \(p\) to \((p0, p1)\) by calculating the dot product of \((p0, a)\), \((p0, p)\) and the orthognal vector of \(p1, p2\). This the graph for \(a\), after which we use the same method to find \( b\) and \( c\). (Note that \(c\) can be simply found through \(a + b + c = 1\))</p>
 
@@ -86,6 +106,13 @@
 			<img src="9.png" width="400px"/>
 			<figcaption>from screen space to texture map</figcaption>
 		</div>
+		<p>While nearest sampling literally takes the nearest pixel to the sample point as a sample, billinear sampling determine the color of each sample point depending on its distance to its surrounding sample points. </p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="19.png" width="400px"/>
+			<figcaption>nearest</figcaption>
+			<img src="20.png" width="400px"/>
+			<figcaption>bilinear</figcaption>
+		</div>
 
 		<h2>Task 6: "Level Sampling" with mipmaps for texture mapping</h2>
 		<p>How do we know which level of texture we are going to use at one point? We calculate "how much the texture map is stretched" at that poin, by finding the distance from \(p(x,y)\) to \(p1(x+1,y)\) and \(p2(x,y+1)\) on the texture map </p>
@@ -94,20 +121,35 @@
 			<figcaption>the distance</figcaption>
 		</div>
 		<p>Then we devide the texture space distance by 1 (which is the screen space distance). Since every level increased, the scale of the texture map becomes 1/2 of the original one, we need to calculate \(level = log_2d\) to get the actual level of mapping. The "nearest sampling" simply uses \((int)level\) to determine the level, while "linear sampling" needs to combine the nearest level and next level. To be noted that level you obtain can't be larger than the max level of the map.</p>
-		<div style="display: flex; flex-direction: row; align-items: center;">
+		<div style="display: flex; flex-direction: row;justify-content: center; align-items: center;">
 			<img src="11.png" width="300px"/>
 			<img src="12.png" width="300px"/>
 			<img src="13.png" width="300px"/>
 		</div>
-		<div style="display: flex; flex-direction: column; align-items: center;">
+		<div style="display: flex; flex-direction: column;justify-content: center; align-items: center;">
 			<figcaption>zero - nearest - linear(the brighter, the level higher)</figcaption>
 		</div>
-		<div style="display: flex; flex-direction: row; align-items: center;">
+		<div style="display: flex; flex-direction: row;justify-content: center; align-items: center;">
 			<img src="14.png" width="300px"/>
 			<img src="15.png" width="300px"/>
 			<img src="16.png" width="300px"/>
 		</div>
-		<h2>(Optional) Task 7: Extra Credit - Draw Something Creative!</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<figcaption>#P_nearest graphs</figcaption>
+		</div>
+		<div style="display: flex; flex-direction: row;justify-content: center; align-items: center;">
+			<img src="21.png" width="300px"/>
+			<img src="22.png" width="300px"/>
+			<img src="23.png" width="300px"/>
+		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<figcaption>#P_linear graphs</figcaption>
+		</div>
+
+		<h2>Press r to rotate</h2>
+		<p>By modifying drawrend.cpp, resterizer.cpp and resterizer.h, I added a new keyboard action that every press on key 'r' will rotate the graph around center point for 30 degrees. </p>
+		<div style="display: flex; flex-direction: column;justify-content: center; align-items: center;">
+			<img src="25.gif" width="300px"/>
+		</div>
 	</body>
 </html>
