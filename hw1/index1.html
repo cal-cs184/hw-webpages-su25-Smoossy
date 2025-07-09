@@ -88,7 +88,7 @@
 			<img src="9.png" width="400px"/>
 			<figcaption>from screen space to texture map</figcaption>
 		</div>
-		<p>Billinear sampling determine the color of each sample point depending on its distance to its surrounding sample points. </p>
+		<p>While nearest sampling literally takes the nearest pixel to the sample point as a sample, billinear sampling determine the color of each sample point depending on its distance to its surrounding sample points. </p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<img src="19.png" width="400px"/>
 			<figcaption>nearest</figcaption>
@@ -103,15 +103,15 @@
 			<figcaption>the distance</figcaption>
 		</div>
 		<p>Then we devide the texture space distance by 1 (which is the screen space distance). Since every level increased, the scale of the texture map becomes 1/2 of the original one, we need to calculate \(level = log_2d\) to get the actual level of mapping. The "nearest sampling" simply uses \((int)level\) to determine the level, while "linear sampling" needs to combine the nearest level and next level. To be noted that level you obtain can't be larger than the max level of the map.</p>
-		<div style="display: flex; flex-direction: row; align-items: center;">
+		<div style="display: flex; flex-direction: row;justify-content: center; align-items: center;">
 			<img src="11.png" width="300px"/>
 			<img src="12.png" width="300px"/>
 			<img src="13.png" width="300px"/>
 		</div>
-		<div style="display: flex; flex-direction: column; align-items: center;">
+		<div style="display: flex; flex-direction: column;justify-content: center; align-items: center;">
 			<figcaption>zero - nearest - linear(the brighter, the level higher)</figcaption>
 		</div>
-		<div style="display: flex; flex-direction: row; align-items: center;">
+		<div style="display: flex; flex-direction: row;justify-content: center; align-items: center;">
 			<img src="14.png" width="300px"/>
 			<img src="15.png" width="300px"/>
 			<img src="16.png" width="300px"/>
@@ -119,13 +119,19 @@
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<figcaption>#P_nearest graphs</figcaption>
 		</div>
-		<div style="display: flex; flex-direction: row; align-items: center;">
+		<div style="display: flex; flex-direction: row;justify-content: center; align-items: center;">
 			<img src="21.png" width="300px"/>
 			<img src="22.png" width="300px"/>
 			<img src="23.png" width="300px"/>
 		</div>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<figcaption>#P_linear graphs</figcaption>
+		</div>
+
+		<h2>Press r to rotate</h2>
+		<p>By modifying drawrend.cpp, resterizer.cpp and resterizer.h, I added a new keyboard action that every press on key 'r' will rotate the graph around center point for 30 degrees. </p>
+		<div style="display: flex; flex-direction: column;justify-content: center; align-items: center;">
+			<img src="25.gif" width="300px"/>
 		</div>
 	</body>
 </html>
