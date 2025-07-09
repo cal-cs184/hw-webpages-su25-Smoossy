@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+		<style>
+			h1 {
+				text-align: center;
+			}
+
+			.container {
+				margin: 0 auto;
+				padding: 60px 20%;
+			}
+
+			figure {
+				text-align: center;
+			}
+
+			img {
+				display: inline-block;
+			}
+
+			body {
+				font-family: 'Inter', sans-serif;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+		<h1>CS184/284A Spring 2025 Homework 1 Write-Up</h1>
+		<div style="text-align: center;">Names: Muze Du</div>
+
+		<br>
+
+		Link to webpage: <a href="https://cal-cs184.github.io/hw-webpages-su25-Smoossy/hw1/index.html">the webpage</a>
+		
+		<br>
+
+		Link to GitHub repository: <a href="https://github.com/cal-cs184/hw-rasterizer-wuyan">github.com/cal-cs184/hw-rasterizer-wuyan</a>
+
+		<figure>
+			<img src="lion.jpg" alt="Lion" style="width:50%"/>
+			<figcaption>You can add images with captions!</figcaption>
+		</figure>
+
+		<!--
+		We've already added one heading per task, to make your write-up as navigable when grading. Please fit your write-up within these sections!
+		-->
+
+		<h2>Overview</h2>
+		The project had successfully constructed a system rendering 2D pictures, expressing images using dot, line and triangle. It is also capable of filling any triangle with texture. The project is a basis for further 3D rendering projects.
+
+		<h2>Task 1: Drawing Single-Color Triangles</h2>
+		<p>It is tempting to consider calculating every point in the triangle bounding box, but it will take a lot of time. Instead, we can find the lowest point of the triangle(marked as p0), and rearrange the points in a clockwise order(to help with "bounded by triangle check"). After doing so, we can start from the bottom-left point to p0. First, we search to the right side. Before touching the border of the bounding box, if find a point inside the box, and there isn't a checkpoint yet, mark a checkpoint. If the check point already exists, the search to the right stops once it goes out of the triangle. Then do the same thing to the leftward. The search of the next row will start from the point above the checkpoint.</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="RTR.png" width="400px"/>
+			<img src="17.png" alt="Lion" style="width:50%"/>
+		</div>
+		
+		<h2>Task 2: Antialiasing by Supersampling</h2>
+		<p>To keep the vertexes of the items unchanged, while, at the same time, increasing the resolution, is the main task of super sampling. To deal with this, we only need to update every step of the sample, from 1 pixel to 1/sqrt(supersample_rate) After sending this to the frame buffer(which is now multiple times in size as the original one), we weight each point as 1/supersample_rate and fill them mutiple-in-one with resolve_to_framebuffer() to the screen buffer<p/>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="1.png" width="250px"/><img src="2.png" width="250px"/><img src="4.png" width="250px"/>
+			<figcaption>sample rate 1, 4, 16</figcaption>
+		</div>
+
+		<h2>Task 3: Transforms</h2>
+		<p>This is pure linear algebra. I don't think I need to do any extra explaination.</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="5.png" width="400px"/>
+			<figcaption>the transform</figcaption>
+		</div>
+
+		<h2>Task 4: Barycentric coordinates</h2>
+		<p>Finding the barycentric coordinates of point p with the equaltion \( a \times p0 + b \times p1 + c \times p2 = p3\) is actually a way to find a relationship which uniquely reflect a point from a triangle to another triangle. To calculate \( a\), \( b\) and \( c\), here 's a simple geometric way:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="7.png" width="400px"/>
+			<figcaption>weighted triangle</figcaption>
+			<img src="18.png" width="400px"/>
+			<figcaption>circle filled with weighted triangles</figcaption>
+		</div>
+		<p>We can figure out the distance from \(a\) and \(p\) to \((p0, p1)\) by calculating the dot product of \((p0, a)\), \((p0, p)\) and the orthognal vector of \(p1, p2\). This the graph for \(a\), after which we use the same method to find \( b\) and \( c\). (Note that \(c\) can be simply found through \(a + b + c = 1\))</p>
+
+		<h2>Task 5: "Pixel sampling" for texture mapping</h2>
+		<p>Using the reflecting method from one triangle to another we conducted in the task 4, we can now put a triangle from the texture map into a triangle on the screen. After obtaining \(u,v\) coordinates, we multipy them accordingly with the width and height of the texture map. Now we can know "Where a pixel on the screen is on the texture map" Then we color the pixel with the color we found on the texture map. </p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="8.png" width="400px"/>
+			<img src="9.png" width="400px"/>
+			<figcaption>from screen space to texture map</figcaption>
+		</div>
+		<p>Billinear sampling determine the color of each sample point depending on its distance to its surrounding sample points. </p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="19.png" width="400px"/>
+			<figcaption>nearest</figcaption>
+			<img src="20.png" width="400px"/>
+			<figcaption>bilinear</figcaption>
+		</div>
+
+		<h2>Task 6: "Level Sampling" with mipmaps for texture mapping</h2>
+		<p>How do we know which level of texture we are going to use at one point? We calculate "how much the texture map is stretched" at that poin, by finding the distance from \(p(x,y)\) to \(p1(x+1,y)\) and \(p2(x,y+1)\) on the texture map </p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="10.png" width="400px"/>
+			<figcaption>the distance</figcaption>
+		</div>
+		<p>Then we devide the texture space distance by 1 (which is the screen space distance). Since every level increased, the scale of the texture map becomes 1/2 of the original one, we need to calculate \(level = log_2d\) to get the actual level of mapping. The "nearest sampling" simply uses \((int)level\) to determine the level, while "linear sampling" needs to combine the nearest level and next level. To be noted that level you obtain can't be larger than the max level of the map.</p>
+		<div style="display: flex; flex-direction: row; align-items: center;">
+			<img src="11.png" width="300px"/>
+			<img src="12.png" width="300px"/>
+			<img src="13.png" width="300px"/>
+		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<figcaption>zero - nearest - linear(the brighter, the level higher)</figcaption>
+		</div>
+		<div style="display: flex; flex-direction: row; align-items: center;">
+			<img src="14.png" width="300px"/>
+			<img src="15.png" width="300px"/>
+			<img src="16.png" width="300px"/>
+		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<figcaption>#P_nearest graphs</figcaption>
+		</div>
+		<div style="display: flex; flex-direction: row; align-items: center;">
+			<img src="21.png" width="300px"/>
+			<img src="22.png" width="300px"/>
+			<img src="23.png" width="300px"/>
+		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<figcaption>#P_linear graphs</figcaption>
+		</div>
+	</body>
+</html>
