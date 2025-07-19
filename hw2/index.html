@@ -27,16 +27,16 @@
 	</head>
 	<body>
 		<div class="container">
-		<h1>CS184/284A Spring 2025 Homework 2 Write-Up</h1>
+		<h1>CS184/284A Summer 2025 Homework 2 Write-Up</h1>
 		<div style="text-align: center;">Names: </div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage: <a href="https://cal-cs184.github.io/hw-webpages-su25-Smoossy/hw2/index.html">webpage</a>
 
 		<br>
 		
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to GitHub repository: <a href="https://github.com/cal-cs184/hw2-meshedit-hachimi/tree/Smoossy-patch-1">repos</a>
 
 		<figure>
 			<img src="teapot.png" alt="Teapot" style="width:50%"/>
@@ -48,69 +48,98 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
-
+		This project achieved a way to implement 2D and 3D bezier curve(though failed on this device due to unkown issue), as wel as peeking into triangle mesh editting through halfedge data structure. Now we can split edge, flip edge and
+		implement complex operation including loop-subdivision.
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
 		<h3>Part 1: Bezier curves with 1D de Casteljau subdivision</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		<p>De Casteljau subdivision is a simple way to present bezier curves with multiple points. Through decreasing the number of points by calculating weighted points regarding to \(t\) and its neighbour control points, we can finally get to a single point regarding to \(t\).</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
-			<table style="width: 100%; text-align: center; border-collapse: collapse;">
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			</table>
+		<img src="1.png" width="400px" align="center" />
 		</div>
+		
 
 		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>Bezier surface has no big difference from bezier curve. By first calculating weighted points on each row through implementing \(u\)and then calculating the final point regarding to the just implemented points and \(v\), we can also get to a single point determined by control points and \(u, v\).</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		<img src="2.png" width="400px" align="center" />
+		<figcaption style="text-align: center;">However, due to unkown issues, for which I have tried seeking for help from TAs, receiving no possible solutions, I could only generate the graph of the wavy cube instead of the teapot.</figcaption>
+		</div>
+		
 
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
 		<h3>Part 3: Area-weighted vertex normals</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+		To implement Area-weighted vertex normals, we first need to figure out the normal of each face around a vertex. </p>
+		<p style="text-align: center;">The formula: \(norm = \sqrt{cross(vector1,vector2)}\) </p>
+		<p>while vectors are the differences between two pairs of the triangle's vertices</p>
+
+		<p>And then we should calculate the area of each face around the vertex</p>
+		<p style="text-align: center;">The formula: \(area = \sqrt{dot(v1,v1)*dot(v2,v2)-dot(v1,v2)^{2}}\)</p>
+
+		<p>Finally, we multipy each normal accordingly with its weight (area/areasum). And here we have the Area-weighted vertex normals. Just like texture mapping, the renderer will determine the shadow on each point of a triangle regarding to the normal of the triangle's vertices.</p>
+		
+		
+		<div style="display: flex; flex-direction: row; align-items: center;">
+		<img src="3.png" width="400px" align="center" />
+		<img src="4.png" width="400px" align="center" />
+		</div>
+		<div>
+		<figcaption>before, after</figcaption>
+		</div>
 
 		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>Flipping edge is a rather simple task, comparing to splitting an edge. We don't need to create any new item, we only need to point the right iterators to the right new positions. Here's the trick: start from halfedges, then vertices, then edges and finally faces will make things much easier. </p>
+		<div style="display: flex; flex-direction: row; align-items: center;">
+		<img src="5.png" width="400px" align="center" />
+		<img src="6.png" width="400px" align="center" />
+		</div>
 
 		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>This task is totally a mess. It to me nearly 80 lines of code to point everything alright. Besides the trick I used for edge flipping, I also drawed a graph to help figuring out what to new, what to point and the right way to point. Any wrong pointed iterator may lead to crush, face dissappearing or bigger problem in the next task. </p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		<img src="splitedge.png" width="300px" align="center" />
+		</div>
+		<div style="display: flex; flex-direction: row; align-items: center;">
+		<img src="7.png" width="300px" align="center" />
+		<img src="8.png" width="300px" align="center" />
+		<img src="9.png" width="300px" align="center" />
+		</div>
+		<div><figcaption>before, after, after</figcaption></div>
+		
+		
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
+		<p>With the basis we build in the last steps, loop subdivision is easy. First traverse around every vertex to calculate its newPosition according to its neighbour vertices, then traverse around every splited edge to get its weighted newPosition regarding to its neighbour vertices. After all, split every edge, flip every new edge connecting a new vertice and an old one, and sign the new positions accordingly to the vertices, we have a subdvided mesh.</p>
+		<div style="display: flex; flex-direction: row; align-items: center;">
+		<img src="10.png" width="300px" align="center" />
+		<img src="11.png" width="300px" align="center" />
+		<img src="12.png" width="300px" align="center" />
 		</div>
+		<div>
+		<figcaption style="text-align: center;">Cube 0~2 times subdivision</figcaption>
+		</div>
+		<p>However, as the subdivision goes, the cube look more like a lemon-shape thing. Observing each vertex carefully, we can see that not every vertex has the same degree. To make it more symmetric, we can split every edge on the face so that every vertex has the same degree.</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		<img src="13.png" width="500px" align="center" />
+		</div>
+		<div>
+		<figcaption style="text-align: center;">Just like this.</figcaption>
+		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		<img src="14.png" width="500px" align="center" />
+		</div>
+		<div>
+		<figcaption style="text-align: center;">After deviding, the cube remains symmetric.</figcaption>
+		</div>
+		
+		<div><p>Through pre spliting edges, we can also make specific edge/vertex remain sharp.</p></div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		<img src="15.png" width="400px" align="center" />
+		<img src="16.png" width="400px" align="center" />
+		</div>
+
+		
 	</body>
 </html>
